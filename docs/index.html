@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SAR Pass &amp; Doppler Simulator</title>
+<meta name="description" content="SAR pass geometry and X-band Doppler history over a ground target, computed from CelesTrak TLEs.">
+<link rel="stylesheet" href="style.css">
+<script src="https://cdn.plot.ly/plotly-2.35.2.min.js" charset="utf-8"></script>
+</head>
+<body>
+<header class="top">
+  <div>
+    <p class="eyebrow">Radar &middot; SAR &middot; Orbit geometry</p>
+    <h1>SAR Pass &amp; Doppler Simulator</h1>
+    <p class="lede" id="lede">Loading pass data&hellip;</p>
+  </div>
+</header>
+
+<div id="banner" class="banner" hidden></div>
+
+<main>
+  <section class="panel passes">
+    <h2>Passes <span class="count" id="count"></span></h2>
+    <div class="filters">
+      <label>Satellite
+        <select id="satFilter"><option value="">All</option></select>
+      </label>
+    </div>
+    <ul id="passList" class="pass-list"></ul>
+  </section>
+
+  <section class="panel detail">
+    <div class="controls">
+      <label>Carrier
+        <select id="band">
+          <option value="1.27e9">L &middot; 1.27 GHz</option>
+          <option value="5.405e9">C &middot; 5.405 GHz</option>
+          <option value="9.65e9" selected>X &middot; 9.65 GHz</option>
+          <option value="13.5e9">Ku &middot; 13.5 GHz</option>
+        </select>
+      </label>
+      <span class="hint">Doppler scales linearly with the carrier: f<sub>D</sub> = &minus;2&nbsp;f<sub>0</sub>&nbsp;·&nbsp;ṙ&nbsp;/&nbsp;c</span>
+    </div>
+
+    <div class="cards" id="cards"></div>
+
+    <div class="chart-title">Two-way Doppler shift vs time <small>(shaded = incidence within the SAR window)</small></div>
+    <div id="chartDoppler" class="chart"></div>
+
+    <div class="chart-title">Incidence angle and slant range</div>
+    <div id="chartGeom" class="chart short"></div>
+
+    <div class="chart-title">
+      Sub-satellite track
+      <span class="seg">
+        <button id="projFlat" class="on">2D map</button>
+        <button id="projGlobe">3D globe</button>
+      </span>
+    </div>
+    <div id="chartMap" class="chart map"></div>
+  </section>
+</main>
+
+<footer>
+  <p>Educational model: SGP4 from public TLEs (CelesTrak), flat ellipsoid terrain, geometric Doppler of a stationary target
+     (no antenna steering, no attitude, no tasking constraints). Incidence window is a configurable assumption,
+     not an operator specification.</p>
+</footer>
+<script src="app.js"></script>
+</body>
+</html>
