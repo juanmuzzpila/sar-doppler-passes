@@ -31,6 +31,7 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--start", help="window start, ISO-8601 UTC (default: now)")
     ap.add_argument("--demo", action="store_true", help="use a synthetic constellation (no network)")
     ap.add_argument("--tle-file", type=Path, help="use TLEs from this file instead of CelesTrak")
+    ap.add_argument("--save-tles", type=Path, help="after a successful CelesTrak download, also save the TLEs to this file")
     ap.add_argument("--cache-dir", type=Path, default=Path(".cache"))
     ap.add_argument("--max-tle-age-days", type=float, default=30.0)
     ap.add_argument("--out", type=Path, default=Path("docs/data/passes.json"))
@@ -55,6 +56,10 @@ def main(argv: list[str] | None = None) -> int:
                   f"       Re-run with --demo or --tle-file <file>.", file=sys.stderr)
             return 2
         source = "celestrak"
+        if args.save_tles:
+            args.save_tles.parent.mkdir(parents=True, exist_ok=True)
+            args.save_tles.write_text("".join(f"{t.name}\n{t.line1}\n{t.line2}\n" for t in tles))
+            print(f"saved {len(tles)} TLEs -> {args.save_tles}")
         print(f"TLEs: {len(tles)} for NAME={mission.celestrak_query} ({origin})")
 
     if not tles:
